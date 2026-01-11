@@ -1,6 +1,10 @@
 # Medicine Information Web Application
 
 A professional web application that analyzes medicine strips/tablets using OCR and provides comprehensive medicine information using free APIs.
+## 🌐 Live Demo
+
+🚀 The application is live and accessible here:  
+🔗 https://medicine-image-analyzer-1.onrender.com
 
 ## Features
 

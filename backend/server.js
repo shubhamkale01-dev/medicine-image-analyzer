@@ -53,42 +53,9 @@ if (!fs.existsSync('uploads')) {
 }
 
 // Routes
-app.post('/api/upload', upload.single('image'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No image file provided' });
-    }
+// Extract medicine name using OCR
+const medicineName = await ocrService.extractMedicineName(req.file.path);
 
-    // Extract text using OCR
-    const extractedText = await ocrService.extractText(req.file.path);
-    
-    // Clean and detect medicine name
-    const medicineName = ocrService.cleanMedicineName(extractedText);
-    
-    if (!medicineName) {
-      return res.status(400).json({ error: 'Could not detect medicine name from image' });
-    }
-
-    // Get medicine information
-    const medicineInfo = await medicineService.getMedicineInfo(medicineName);
-    const priceInfo = priceService.getApproximatePrice(medicineName);
-
-    res.json({
-      success: true,
-      data: {
-        extractedText,
-        medicineName,
-        medicineInfo,
-        priceInfo,
-        imageUrl: `/uploads/${req.file.filename}`
-      }
-    });
-
-  } catch (error) {
-    console.error('Upload error:', error);
-    res.status(500).json({ error: error.message || 'Failed to process image' });
-  }
-});
 
 app.get('/api/medicine/:name', async (req, res) => {
   try {
