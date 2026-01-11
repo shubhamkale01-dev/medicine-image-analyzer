@@ -1,0 +1,37 @@
+import axios from 'axios';
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
+class ApiService {
+  constructor() {
+    this.api = axios.create({
+      baseURL: API_BASE_URL,
+      timeout: 30000, // 30 seconds timeout for OCR processing
+    });
+  }
+
+  async uploadImage(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    return this.api.post('/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  }
+
+  async getMedicineInfo(medicineName) {
+    return this.api.get(`/medicine/${encodeURIComponent(medicineName)}`);
+  }
+
+  async getPrice(medicineName) {
+    return this.api.get(`/price/${encodeURIComponent(medicineName)}`);
+  }
+
+  async healthCheck() {
+    return this.api.get('/health');
+  }
+}
+
+export default new ApiService();

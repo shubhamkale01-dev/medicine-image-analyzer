@@ -1,0 +1,385 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+.app-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 2rem 0;
+  text-align: center;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+.app-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c5aa0;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.medical-icon {
+  font-size: 3rem;
+}
+
+.app-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  font-weight: 400;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+/* Disclaimer */
+.disclaimer {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.disclaimer-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #856404;
+  margin-bottom: 0.5rem;
+}
+
+.disclaimer-text {
+  color: #856404;
+  font-size: 0.95rem;
+}
+
+/* Upload Section */
+.upload-section {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.upload-container {
+  text-align: center;
+}
+
+.upload-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c5aa0;
+  margin-bottom: 1rem;
+}
+
+.dropzone {
+  border: 3px dashed #ddd;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.dropzone:hover,
+.dropzone.active {
+  border-color: #2c5aa0;
+  background: #f0f4ff;
+}
+
+.upload-icon {
+  font-size: 4rem;
+  color: #2c5aa0;
+  margin-bottom: 1rem;
+}
+
+.upload-text {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.upload-hint {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-button {
+  background: #2c5aa0;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 1rem;
+}
+
+.upload-button:hover {
+  background: #1e3d6f;
+}
+
+.upload-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Image Preview */
+.image-preview {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.preview-image {
+  max-width: 300px;
+  max-height: 200px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.reset-button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.3s ease;
+}
+
+.reset-button:hover {
+  background: #c82333;
+}
+
+/* Loading */
+.loading-section {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2c5aa0;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-message {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+/* Error */
+.error-section {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.error-message {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 12px;
+  padding: 2rem;
+  color: #721c24;
+}
+
+.error-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.error-text {
+  margin-bottom: 1.5rem;
+}
+
+.retry-button {
+  background: #2c5aa0;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.retry-button:hover {
+  background: #1e3d6f;
+}
+
+/* Medicine Info */
+.medicine-info {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.medicine-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.medicine-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c5aa0;
+  margin-bottom: 0.5rem;
+}
+
+.medicine-generic {
+  font-size: 1.1rem;
+  color: #666;
+  font-style: italic;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.info-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border-left: 4px solid #2c5aa0;
+}
+
+.info-card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c5aa0;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-card-content {
+  color: #555;
+  line-height: 1.6;
+}
+
+.price-info {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.price-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.price-range {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.price-disclaimer {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-top: 1rem;
+}
+
+/* Footer */
+.app-footer {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem 0;
+  text-align: center;
+  color: #666;
+  margin-top: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app-title {
+    font-size: 2rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .medical-icon {
+    font-size: 2.5rem;
+  }
+  
+  .container {
+    padding: 0 15px;
+  }
+  
+  .upload-section,
+  .medicine-info {
+    padding: 1.5rem;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .dropzone {
+    padding: 2rem 1rem;
+  }
+  
+  .upload-icon {
+    font-size: 3rem;
+  }
+}
