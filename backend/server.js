@@ -11,6 +11,10 @@ const priceService = require('./services/priceService');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.get("/", (req, res) => {
+  res.send("Medicine Image Analyzer Backend is running 🚀");
+});
+
 // Middleware
 app.use(cors());
 app.use(express.json());
