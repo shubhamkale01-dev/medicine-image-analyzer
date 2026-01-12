@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://medicine-image-analyzer.onrender.com/api';
 class ApiService {
   constructor() {
     this.api = axios.create({
@@ -19,6 +18,10 @@ class ApiService {
         'Content-Type': 'multipart/form-data',
       },
     });
+  }
+
+  async searchMedicine(medicineName) {
+    return this.api.get(`/search/${encodeURIComponent(medicineName)}`);
   }
 
   async getMedicineInfo(medicineName) {

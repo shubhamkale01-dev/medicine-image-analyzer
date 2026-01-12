@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ImageUpload from './components/ImageUpload';
+import MedicineSearch from './components/MedicineSearch';
 import MedicineInfo from './components/MedicineInfo';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
@@ -12,6 +13,11 @@ function App() {
   const [error, setError] = useState(null);
 
   const handleImageUpload = (data) => {
+    setMedicineData(data);
+    setError(null);
+  };
+
+  const handleSearch = (data) => {
     setMedicineData(data);
     setError(null);
   };
@@ -48,6 +54,18 @@ function App() {
       <main className="main-content">
         <div className="container">
           <Disclaimer />
+          
+          <div className="search-section">
+            <MedicineSearch
+              onSearch={handleSearch}
+              onLoading={handleLoading}
+              onError={handleError}
+            />
+          </div>
+
+          <div className="divider">
+            <span>OR</span>
+          </div>
           
           <div className="upload-section">
             <ImageUpload
