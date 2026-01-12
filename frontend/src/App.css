@@ -178,7 +178,111 @@ body {
   width: 100%;
 }
 
-/* Upload Section */
+/* Search Section */
+.search-section {
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  padding: 3rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.search-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--success-gradient);
+}
+
+.search-container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 300px;
+  padding: 1rem 1.5rem;
+  border: 2px solid var(--bg-tertiary);
+  border-radius: var(--border-radius);
+  font-size: 1.1rem;
+  transition: var(--transition);
+  background: var(--bg-secondary);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  background: var(--bg-primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: var(--success-gradient);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.search-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.search-btn:disabled {
+  background: var(--bg-tertiary);
+  color: var(--text-light);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Divider */
+.divider {
+  text-align: center;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--bg-tertiary), transparent);
+}
+
+.divider-text {
+  background: var(--bg-primary);
+  padding: 0.5rem 2rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 1.1rem;
+  border: 2px solid var(--bg-tertiary);
+  border-radius: 25px;
+  position: relative;
+  z-index: 1;
+}
 .upload-section {
   background: var(--bg-primary);
   border-radius: var(--border-radius-lg);
@@ -1016,9 +1120,15 @@ body {
     flex-direction: column;
   }
   
-  .analyze-btn,
-  .clear-btn,
-  .new-analysis-btn {
+  .search-container {
+    flex-direction: column;
+  }
+  
+  .search-input {
+    min-width: 100%;
+  }
+  
+  .search-btn {
     width: 100%;
     justify-content: center;
   }

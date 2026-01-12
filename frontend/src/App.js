@@ -1,13 +1,39 @@
 import React, { useState, useRef } from 'react';
 import './App.css';
 
-// Mock API service for demonstration
-const mockApiService = {
+// API service with both search and image upload
+const apiService = {
+  async searchMedicine(query) {
+    const API_BASE = "https://medicine-image-analyzer-backend.onrender.com";
+    
+    try {
+      const res = await fetch(`${API_BASE}/api/medicine/${encodeURIComponent(query)}`);
+      if (!res.ok) throw new Error("API not responding");
+      const data = await res.json();
+      
+      const priceRes = await fetch(`${API_BASE}/api/price/${encodeURIComponent(query)}`);
+      const priceData = priceRes.ok ? await priceRes.json() : null;
+      
+      return {
+        medicineName: query,
+        genericName: data.data?.fda?.genericName || query,
+        indications: data.data?.fda?.indications || "Information not available",
+        sideEffects: data.data?.fda?.adverseReactions || "Information not available",
+        warnings: data.data?.fda?.warnings || "Consult healthcare provider",
+        manufacturer: data.data?.fda?.manufacturerName || "Not available",
+        approximatePrice: priceData?.data ? `₹${priceData.data.min}-${priceData.data.max}` : "Price not available",
+        rxcui: data.data?.rxnorm?.rxcui || null
+      };
+    } catch (error) {
+      throw new Error("Server error or cold start. Try again in 30 seconds.");
+    }
+  },
+  
   async identifyMedicine(file) {
-    // Simulate API delay
+    // Simulate API delay for image processing
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    // Mock response based on common medicine names
+    // Mock response for image upload
     const mockResponses = [
       {
         detectedText: "PARACETAMOL TABLETS IP 500mg Each uncoated tablet contains: Paracetamol IP 500mg",
@@ -30,21 +56,9 @@ const mockApiService = {
         manufacturer: "Abbott, Pfizer, Dr. Reddy's",
         approximatePrice: "₹20-40",
         rxcui: "5640"
-      },
-      {
-        detectedText: "CETIRIZINE HYDROCHLORIDE TABLETS 10mg Antihistamine for allergies",
-        medicineName: "Cetirizine",
-        genericName: "Cetirizine Hydrochloride",
-        indications: "Antihistamine used to treat allergic rhinitis, hay fever, urticaria (hives), and other allergic reactions. Provides relief from sneezing, itching, and watery eyes.",
-        sideEffects: "Common side effects include drowsiness, dry mouth, fatigue, dizziness, and headache. Usually mild and temporary.",
-        warnings: "May cause drowsiness. Avoid alcohol and be cautious while driving or operating machinery. Consult doctor if pregnant or breastfeeding.",
-        manufacturer: "UCB, Cipla, Glenmark",
-        approximatePrice: "₹25-45",
-        rxcui: "1003"
       }
     ];
     
-    // Return random mock response
     return mockResponses[Math.floor(Math.random() * mockResponses.length)];
   }
 };
@@ -56,6 +70,8 @@ function App() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [dragActive, setDragActive] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchLoading, setSearchLoading] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleFileSelect = (file) => {
@@ -103,6 +119,26 @@ function App() {
     if (file) handleFileSelect(file);
   };
 
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      setError('Please enter a medicine name');
+      return;
+    }
+
+    setSearchLoading(true);
+    setError('');
+    setResult(null);
+
+    try {
+      const data = await apiService.searchMedicine(searchQuery);
+      setResult(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
   const handleUpload = async () => {
     if (!selectedFile) {
       setError('Please select an image first');
@@ -114,8 +150,7 @@ function App() {
     setResult(null);
 
     try {
-      // Use mock API service for demonstration
-      const data = await mockApiService.identifyMedicine(selectedFile);
+      const data = await apiService.identifyMedicine(selectedFile);
       setResult(data);
     } catch (err) {
       setError('Failed to analyze medicine. Please try again.');
@@ -152,6 +187,46 @@ function App() {
       </header>
 
       <main className="main-content">
+        {/* Search Section */}
+        <div className="search-section">
+          <div className="section-header">
+            <h2>🔍 Search Medicine by Name</h2>
+            <p>Enter the medicine name to get detailed information</p>
+          </div>
+          
+          <div className="search-container">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Enter medicine name (e.g., Paracetamol, Ibuprofen)"
+              className="search-input"
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+            />
+            <button
+              onClick={handleSearch}
+              disabled={searchLoading}
+              className={`search-btn ${searchLoading ? 'loading' : ''}`}
+            >
+              {searchLoading ? (
+                <>
+                  <div className="spinner"></div>
+                  <span>Searching...</span>
+                </>
+              ) : (
+                <>
+                  <span className="btn-icon">🔍</span>
+                  <span>Search Medicine</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        <div className="divider">
+          <span className="divider-text">OR</span>
+        </div>
+
         <div className="upload-section">
           <div className="section-header">
             <h2>📸 Upload Medicine Image</h2>
@@ -226,7 +301,7 @@ function App() {
               )}
             </button>
             
-            {selectedFile && !loading && (
+            {selectedFile && !loading && !searchLoading && (
               <button onClick={resetForm} className="clear-btn">
                 <span className="btn-icon">🔄</span>
                 <span>Upload New Image</span>
@@ -235,7 +310,7 @@ function App() {
           </div>
         </div>
 
-        {loading && (
+        {(loading || searchLoading) && (
           <div className="loading-section">
             <div className="loading-animation">
               <div className="pulse-ring"></div>
