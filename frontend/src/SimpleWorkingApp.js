@@ -29,18 +29,41 @@ function App() {
         console.log('Root endpoint failed:', e.message);
       }
       
-      // Test 3: Search endpoint
-      const res = await fetch(`https://medicine-image-analyzer-1.onrender.com/api/search/${query}`);
-      console.log('Search response status:', res.status);
+      // Test 3: Try medicine endpoint instead of search
+      const res = await fetch(`https://medicine-image-analyzer-1.onrender.com/api/medicine/${query}`);
+      console.log('Medicine response status:', res.status);
       
       if (res.status === 404) {
-        setData({ error: 'Search endpoint not found. Check server deployment.' });
+        setData({ error: 'Medicine endpoint not found. Server needs redeployment.' });
         return;
       }
       
       const result = await res.json();
-      console.log('Search result:', result);
-      setData(result);
+      console.log('Medicine result:', result);
+      
+      // Get price info separately
+      try {
+        const priceRes = await fetch(`https://medicine-image-analyzer-1.onrender.com/api/price/${query}`);
+        const priceData = await priceRes.json();
+        
+        setData({
+          success: true,
+          data: {
+            medicineName: query,
+            medicineInfo: result.data,
+            priceInfo: priceData.success ? priceData.data : null
+          }
+        });
+      } catch (priceError) {
+        setData({
+          success: true,
+          data: {
+            medicineName: query,
+            medicineInfo: result.data,
+            priceInfo: null
+          }
+        });
+      }
       
     } catch (e) {
       console.error('Search error:', e);
