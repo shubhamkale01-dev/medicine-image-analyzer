@@ -1,10 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import RobustApp from './RobustApp';
+import SimpleWorkingApp from './SimpleWorkingApp';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <RobustApp />
-  </React.StrictMode>
-);
+root.render(<SimpleWorkingApp />);
