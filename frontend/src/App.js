@@ -78,7 +78,7 @@ function App() {
 
           {loading && (
             <div className="loading-section">
-              <LoadingSpinner message="Analyzing medicine image..." />
+              <LoadingSpinner message={medicineData ? "Processing..." : "Connecting to server... (may take 30-60 seconds on first request)"} />
             </div>
           )}
 

@@ -313,6 +313,13 @@ body {
   color: #666;
 }
 
+.loading-tip {
+  font-size: 0.9rem;
+  color: #999;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
 /* Error */
 .error-section {
   text-align: center;

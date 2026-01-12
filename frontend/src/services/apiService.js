@@ -5,7 +5,7 @@ class ApiService {
   constructor() {
     this.api = axios.create({
       baseURL: API_BASE_URL,
-      timeout: 30000, // 30 seconds timeout for OCR processing
+      timeout: 120000, // 2 minutes for Render cold starts
     });
   }
 

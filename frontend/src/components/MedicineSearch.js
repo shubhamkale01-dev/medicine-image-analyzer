@@ -15,12 +15,22 @@ const MedicineSearch = ({ onSearch, onLoading, onError }) => {
     onLoading(true);
     try {
       console.log('Searching for:', searchQuery.trim());
+      // Show loading message for Render cold start
       const result = await apiService.searchMedicine(searchQuery.trim());
       console.log('Search result:', result);
       onSearch(result.data);
     } catch (error) {
       console.error('Search error:', error);
-      const errorMsg = error.response?.data?.error || error.message || 'Failed to search medicine';
+      let errorMsg = 'Failed to search medicine';
+      
+      if (error.code === 'ECONNABORTED') {
+        errorMsg = 'Server is starting up (cold start). Please try again in a moment.';
+      } else if (error.response?.data?.error) {
+        errorMsg = error.response.data.error;
+      } else if (error.message) {
+        errorMsg = error.message;
+      }
+      
       onError(`Search failed: ${errorMsg}`);
     } finally {
       onLoading(false);
