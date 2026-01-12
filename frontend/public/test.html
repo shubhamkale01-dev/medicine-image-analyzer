@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Medicine Info App</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+      .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; }
+      .header { text-align: center; margin-bottom: 30px; }
+      .search-box { margin: 20px 0; }
+      input { padding: 10px; width: 300px; border: 1px solid #ddd; border-radius: 5px; }
+      button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+      button:hover { background: #0056b3; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>⚕️ Medicine Information System</h1>
+        <p>Upload a medicine strip or search by name</p>
+      </div>
+      
+      <div class="search-box">
+        <h3>🔍 Search Medicine</h3>
+        <input type="text" id="searchInput" placeholder="Enter medicine name (e.g., Paracetamol)" />
+        <button onclick="searchMedicine()">Search</button>
+      </div>
+      
+      <div class="search-box">
+        <h3>📷 Upload Image</h3>
+        <input type="file" id="imageInput" accept="image/*" />
+        <button onclick="uploadImage()">Analyze Image</button>
+      </div>
+      
+      <div id="results" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+      function searchMedicine() {
+        const query = document.getElementById('searchInput').value;
+        if (!query) {
+          alert('Please enter a medicine name');
+          return;
+        }
+        
+        document.getElementById('results').innerHTML = '<p>Searching for: ' + query + '</p><p>Loading...</p>';
+        
+        fetch('https://medicine-image-analyzer-1.onrender.com/api/search/' + encodeURIComponent(query))
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              displayResults(data.data);
+            } else {
+              document.getElementById('results').innerHTML = '<p style="color: red;">Error: ' + (data.error || 'Search failed') + '</p>';
+            }
+          })
+          .catch(error => {
+            document.getElementById('results').innerHTML = '<p style="color: red;">Network Error: ' + error.message + '</p>';
+          });
+      }
+      
+      function uploadImage() {
+        const file = document.getElementById('imageInput').files[0];
+        if (!file) {
+          alert('Please select an image');
+          return;
+        }
+        
+        document.getElementById('results').innerHTML = '<p>Uploading and analyzing image...</p>';
+        
+        const formData = new FormData();
+        formData.append('image', file);
+        
+        fetch('https://medicine-image-analyzer-1.onrender.com/api/upload', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            displayResults(data.data);
+          } else {
+            document.getElementById('results').innerHTML = '<p style="color: red;">Error: ' + (data.error || 'Upload failed') + '</p>';
+          }
+        })
+        .catch(error => {
+          document.getElementById('results').innerHTML = '<p style="color: red;">Network Error: ' + error.message + '</p>';
+        });
+      }
+      
+      function displayResults(data) {
+        const { medicineName, medicineInfo, priceInfo } = data;
+        const { fda } = medicineInfo;
+        
+        let html = '<div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">';
+        html += '<h2>📋 ' + medicineName + '</h2>';
+        
+        if (fda) {
+          html += '<h3>ℹ️ Information</h3>';
+          html += '<p><strong>Generic Name:</strong> ' + (fda.genericName || 'Not available') + '</p>';
+          html += '<p><strong>Manufacturer:</strong> ' + (fda.manufacturer || 'Not available') + '</p>';
+          html += '<p><strong>Usage:</strong> ' + (fda.indications || 'Not available') + '</p>';
+          html += '<p><strong>Warnings:</strong> ' + (fda.warnings || 'Not available') + '</p>';
+        }
+        
+        if (priceInfo) {
+          html += '<h3>💰 Price</h3>';
+          html += '<p>₹' + priceInfo.min + ' - ₹' + priceInfo.max + ' per ' + priceInfo.unit + '</p>';
+          html += '<p style="font-size: 0.9em; color: #666;">' + priceInfo.disclaimer + '</p>';
+        }
+        
+        html += '<p style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-top: 15px;">';
+        html += '⚠️ <strong>Disclaimer:</strong> This information is for educational purposes only. Always consult a licensed healthcare professional.';
+        html += '</p>';
+        html += '</div>';
+        
+        document.getElementById('results').innerHTML = html;
+      }
+    </script>
+  </body>
+</html>
