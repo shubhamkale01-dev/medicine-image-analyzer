@@ -18,6 +18,11 @@ function App() {
     
     try {
       console.log('Searching for:', searchQuery);
+      
+      // First test if API is reachable
+      const healthResponse = await fetch('https://medicine-image-analyzer-1.onrender.com/api/health');
+      console.log('Health check:', healthResponse.status);
+      
       const response = await fetch(`https://medicine-image-analyzer-1.onrender.com/api/search/${encodeURIComponent(searchQuery)}`, {
         method: 'GET',
         headers: {
@@ -26,6 +31,10 @@ function App() {
       });
       
       console.log('Response status:', response.status);
+      
+      if (response.status === 404) {
+        throw new Error('API endpoint not found. Server may be starting up.');
+      }
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -41,7 +50,11 @@ function App() {
       }
     } catch (err) {
       console.error('Search error:', err);
-      setError(`Search failed: ${err.message}`);
+      if (err.message.includes('404')) {
+        setError('Server is starting up. Please wait 30-60 seconds and try again.');
+      } else {
+        setError(`Search failed: ${err.message}`);
+      }
     } finally {
       setLoading(false);
     }
