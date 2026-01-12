@@ -127,6 +127,15 @@ app.get('/api/price/:name', (req, res) => {
   }
 });
 
+app.get('/api/test/:name', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Test endpoint working',
+    name: req.params.name,
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Medicine Info API is running' });
 });

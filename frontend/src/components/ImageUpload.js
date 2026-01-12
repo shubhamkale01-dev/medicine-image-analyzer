@@ -37,10 +37,14 @@ const ImageUpload = ({ onUpload, onLoading, onError, onReset }) => {
 
     onLoading(true);
     try {
+      console.log('Uploading file:', selectedFile.name);
       const result = await apiService.uploadImage(selectedFile);
+      console.log('Upload result:', result);
       onUpload(result.data);
     } catch (error) {
-      onError(error.response?.data?.error || 'Failed to process image');
+      console.error('Upload error:', error);
+      const errorMsg = error.response?.data?.error || error.message || 'Failed to process image';
+      onError(`Upload failed: ${errorMsg}`);
     } finally {
       onLoading(false);
     }

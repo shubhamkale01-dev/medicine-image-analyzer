@@ -8,6 +8,7 @@ class MedicineService {
 
   async getMedicineInfo(medicineName) {
     try {
+      console.log('Fetching medicine info for:', medicineName);
       const [fdaData, rxNormData] = await Promise.allSettled([
         this.getFDAInfo(medicineName),
         this.getRxNormInfo(medicineName)
@@ -15,12 +16,18 @@ class MedicineService {
 
       return {
         name: medicineName,
-        fda: fdaData.status === 'fulfilled' ? fdaData.value : null,
-        rxnorm: rxNormData.status === 'fulfilled' ? rxNormData.value : null,
+        fda: fdaData.status === 'fulfilled' ? fdaData.value : this.getDefaultFDAInfo(medicineName),
+        rxnorm: rxNormData.status === 'fulfilled' ? rxNormData.value : this.getDefaultRxNormInfo(medicineName),
         disclaimer: "This information is for educational purposes only. Always consult a licensed healthcare professional."
       };
     } catch (error) {
-      throw new Error(`Failed to fetch medicine information: ${error.message}`);
+      console.error('Medicine service error:', error);
+      return {
+        name: medicineName,
+        fda: this.getDefaultFDAInfo(medicineName),
+        rxnorm: this.getDefaultRxNormInfo(medicineName),
+        disclaimer: "This information is for educational purposes only. Always consult a licensed healthcare professional."
+      };
     }
   }
 

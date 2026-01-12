@@ -14,10 +14,14 @@ const MedicineSearch = ({ onSearch, onLoading, onError }) => {
 
     onLoading(true);
     try {
+      console.log('Searching for:', searchQuery.trim());
       const result = await apiService.searchMedicine(searchQuery.trim());
+      console.log('Search result:', result);
       onSearch(result.data);
     } catch (error) {
-      onError(error.response?.data?.error || 'Failed to search medicine');
+      console.error('Search error:', error);
+      const errorMsg = error.response?.data?.error || error.message || 'Failed to search medicine';
+      onError(`Search failed: ${errorMsg}`);
     } finally {
       onLoading(false);
     }

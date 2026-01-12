@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://medicine-image-analyzer.onrender.com/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://medicine-image-analyzer-1.onrender.com/api';
 class ApiService {
   constructor() {
     this.api = axios.create({
