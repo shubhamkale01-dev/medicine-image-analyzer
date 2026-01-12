@@ -1,0 +1,1 @@
+import React from 'react';\n\nfunction TestApp() {\n  return (\n    <div style={{ padding: '20px', textAlign: 'center' }}>\n      <h1>Medicine Info App - Test</h1>\n      <p>If you see this, React is working!</p>\n      <button onClick={() => alert('Button works!')}>Test Button</button>\n    </div>\n  );\n}\n\nexport default TestApp;
