@@ -8,12 +8,43 @@ function App() {
   const search = async () => {
     if (!query) return;
     setLoading(true);
+    
     try {
+      // Test different endpoints to see what's available
+      console.log('Testing endpoints...');
+      
+      // Test 1: Health check
+      try {
+        const healthRes = await fetch('https://medicine-image-analyzer-1.onrender.com/api/health');
+        console.log('Health check:', healthRes.status, await healthRes.text());
+      } catch (e) {
+        console.log('Health check failed:', e.message);
+      }
+      
+      // Test 2: Root endpoint
+      try {
+        const rootRes = await fetch('https://medicine-image-analyzer-1.onrender.com/');
+        console.log('Root endpoint:', rootRes.status, await rootRes.text());
+      } catch (e) {
+        console.log('Root endpoint failed:', e.message);
+      }
+      
+      // Test 3: Search endpoint
       const res = await fetch(`https://medicine-image-analyzer-1.onrender.com/api/search/${query}`);
+      console.log('Search response status:', res.status);
+      
+      if (res.status === 404) {
+        setData({ error: 'Search endpoint not found. Check server deployment.' });
+        return;
+      }
+      
       const result = await res.json();
+      console.log('Search result:', result);
       setData(result);
+      
     } catch (e) {
-      setData({ error: e.message });
+      console.error('Search error:', e);
+      setData({ error: `Network error: ${e.message}` });
     }
     setLoading(false);
   };
