@@ -6,6 +6,7 @@ class ApiService {
     this.api = axios.create({
       baseURL: API_BASE_URL,
       timeout: 120000, // 2 minutes for Render cold starts
+      withCredentials: false, // Don't send credentials for CORS
     });
   }
 
